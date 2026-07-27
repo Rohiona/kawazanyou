@@ -1,0 +1,41 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1785118034742,
+      "tag": "0000_friendly_lethal_legion",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1785119922602,
+      "tag": "0001_slim_sandman",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1785120417000,
+      "tag": "0002_keep_only_expense_template",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1785121290898,
+      "tag": "0003_add_allocation_aliases",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1785132300114,
+      "tag": "0004_jazzy_madame_hydra",
+      "breakpoints": true
+    }
+  ]
+}
