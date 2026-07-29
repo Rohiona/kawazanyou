@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { Brand } from "./Brand";
 import {
   calculateAnnualTotals,
   calculateMonthlySummary,
@@ -236,11 +237,9 @@ export function Dashboard({ displayName, email, signOutHref, claimToken }: Props
 
   return (
     <main className="app-shell">
+      <a className="skip-link" href="#monthly-workspace">本文へ移動</a>
       <header className="topbar">
-        <a className="brand" href="#top" aria-label="皮算用 ホーム">
-          <span className="brand-mark">皮</span>
-          <span>皮算用</span>
-        </a>
+        <Brand href="#top" />
         <div className="account-menu">
           <span className="account-avatar">{displayName.slice(0, 1)}</span>
           <span className="account-copy">
@@ -336,6 +335,7 @@ export function Dashboard({ displayName, email, signOutHref, claimToken }: Props
             />
           )}
 
+          <div id="monthly-workspace" className="workspace-anchor" />
           <section className="income-grid">
             <div className="income-form panel">
               <div className="section-heading">
@@ -454,8 +454,9 @@ export function Dashboard({ displayName, email, signOutHref, claimToken }: Props
             <label className="field"><span>{selectedMonth}月のメモ</span><textarea value={activePlan.memo} placeholder="請求の変動、来月の予定など" onChange={(event) => changePlan((plan) => ({ ...plan, memo: event.target.value }))} /></label>
           </section>
 
-          <div className="save-dock">
-            <p className={status === "error" ? "status error" : "status"}>{message || "変更内容は保存ボタンで確定します"}</p>
+          <div className="save-dock" role="region" aria-label="月次データの保存">
+            <div className="save-state" aria-hidden="true"><span /></div>
+            <p className={status === "error" ? "status error" : "status"} aria-live="polite">{message || "変更内容は保存ボタンで確定します"}</p>
             <button className="primary-button" type="button" onClick={savePlan} disabled={status === "saving"}>
               {status === "saving" ? "保存中…" : `${selectedMonth}月分を保存`}
             </button>
@@ -779,9 +780,9 @@ function MoneyNumberInput({ label, value, currency = false, disabled = false, on
 function RowActions({ index, count, locked = false, onMove, onToggleLock, onDelete }: RowControlProps & { locked?: boolean }) {
   return (
     <div className="row-actions">
-      <button className="move-row" type="button" onClick={() => onMove(-1)} disabled={index === 0} aria-label="この項目を上へ移動" title="上へ移動">↑</button>
-      <button className="move-row" type="button" onClick={() => onMove(1)} disabled={index === count - 1} aria-label="この項目を下へ移動" title="下へ移動">↓</button>
-      <button className={`lock-row${locked ? " active" : ""}`} type="button" onClick={onToggleLock} aria-pressed={locked} aria-label={locked ? "ロックを解除" : "この項目をロック"} title={locked ? "ロックを解除して編集可能にする" : "編集と削除をロックする"}>{locked ? "🔒" : "🔓"}</button>
+      <button className="move-row" type="button" onClick={() => onMove(-1)} disabled={index === 0} aria-label="この項目を上へ移動" title="上へ移動"><span aria-hidden="true">⌃</span></button>
+      <button className="move-row" type="button" onClick={() => onMove(1)} disabled={index === count - 1} aria-label="この項目を下へ移動" title="下へ移動"><span aria-hidden="true">⌄</span></button>
+      <button className={`lock-row${locked ? " active" : ""}`} type="button" onClick={onToggleLock} aria-pressed={locked} aria-label={locked ? "ロックを解除" : "この項目をロック"} title={locked ? "ロックを解除して編集可能にする" : "編集と削除をロックする"}><span className="lock-icon" aria-hidden="true" /></button>
       <DeleteButton disabled={locked} onClick={onDelete} />
     </div>
   );
@@ -796,7 +797,7 @@ function DeleteButton({ disabled = false, onClick }: { disabled?: boolean; onCli
     return () => window.clearTimeout(timeout);
   }, [armed]);
 
-  return <button className={`delete-row${armed ? " armed" : ""}`} type="button" disabled={disabled} onBlur={() => setArmed(false)} onClick={() => armed ? onClick() : setArmed(true)} aria-label={armed ? "もう一度押して削除を確定" : disabled ? "ロック中のため削除できません" : "この項目を削除"} title={armed ? "もう一度押すと削除します" : "削除"}>×</button>;
+  return <button className={`delete-row${armed ? " armed" : ""}`} type="button" disabled={disabled} onBlur={() => setArmed(false)} onClick={() => armed ? onClick() : setArmed(true)} aria-label={armed ? "もう一度押して削除を確定" : disabled ? "ロック中のため削除できません" : "この項目を削除"} title={armed ? "もう一度押すと削除します" : "削除"}><span aria-hidden="true">×</span></button>;
 }
 
 function numberValue(value: string) {
