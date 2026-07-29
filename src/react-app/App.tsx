@@ -60,7 +60,7 @@ function Landing({ claimToken }: { claimToken: string }) {
   const signInHref = chatGPTSignInPath(returnTo);
 
   return (
-    <main className="landing-shell">
+    <main className="landing-shell" data-ui-version="commercial-2026-07">
       <header className="landing-nav">
         <Brand />
         <a className="nav-button" href={signInHref}>ログイン <span aria-hidden="true">↗</span></a>

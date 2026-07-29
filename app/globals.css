@@ -7,6 +7,7 @@
   --surface: #fdfcf9;
   --surface-muted: #f7f6f1;
   --surface-strong: #e9eee9;
+  --surface-overlay: rgba(253, 252, 249, .72);
   --ink: #142522;
   --ink-soft: #2d3d39;
   --muted: #68736f;
@@ -356,7 +357,7 @@ input, output, strong { font-variant-numeric: tabular-nums lining-nums; }
   padding: 30px;
   border: 1px solid rgba(20,37,34,.1);
   border-radius: var(--radius-md);
-  background: rgba(253,252,249,.72);
+  background: var(--surface-overlay);
   box-shadow: var(--shadow-xs);
   transition: transform var(--duration) var(--ease), box-shadow var(--duration) var(--ease), border-color var(--duration-fast) ease;
 }

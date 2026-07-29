@@ -236,7 +236,7 @@ export function Dashboard({ displayName, email, signOutHref, claimToken }: Props
   }
 
   return (
-    <main className="app-shell">
+    <main className="app-shell" data-ui-version="commercial-2026-07">
       <a className="skip-link" href="#monthly-workspace">本文へ移動</a>
       <header className="topbar">
         <Brand href="#top" />
