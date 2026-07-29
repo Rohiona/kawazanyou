@@ -69,13 +69,13 @@ function Landing({ claimToken }: { claimToken: string }) {
       </header>
       <section className="landing-hero">
         <div className="landing-copy">
-          <p className="eyebrow">FREELANCE MONEY PLANNER</p>
-          <h1>報酬が入ったら、<br /><em>3分</em>でお金を整える。</h1>
-          <p>税金の確保、家計予算、口座への振り分け。毎月Excelで繰り返していた作業を、ひとつの流れにまとめました。</p>
+          <p className="eyebrow">フリーランスの月次資金管理</p>
+          <h1>毎月のお金を、<br />ひとつの台帳で。</h1>
+          <p>報酬、税金、請求額、家計予算、口座への振り分け。毎月の確認と記録を、迷わない順番にまとめます。</p>
           <a className="primary-button landing-cta" href={signInHref}>
             ChatGPTでログイン <span>→</span>
           </a>
-          <small>新しいパスワードは不要です。入力データはログインした本人だけに表示されます。</small>
+          <small>新しいパスワードは不要です。記録はログインした本人だけに表示されます。</small>
         </div>
         <div className="landing-visual" aria-label="皮算用でできること">
           <div className="visual-ticket ticket-income"><span>今月の報酬</span><strong>¥ 900,000</strong><i>入力</i></div>

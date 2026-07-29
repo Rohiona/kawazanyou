@@ -253,10 +253,10 @@ export function Dashboard({ displayName, email, signOutHref, claimToken }: Props
 
       <section className="dashboard-hero" id="top">
         <div>
-          <p className="eyebrow">FREELANCE MONEY PLANNER</p>
-          <h1>今月のお金を、<br />迷わず振り分ける。</h1>
+          <p className="eyebrow">月次資金管理</p>
+          <h1><span className="hero-year">{year}年 </span>{selectedMonth}月の資金計画</h1>
           <p className="hero-copy">
-            報酬を入力すると、税金の確保額・家計予算・残せる金額を自動計算します。
+            請求額を確認し、口座への振り分けと家計予算を整えます。
           </p>
         </div>
         <div className="year-control" aria-label="表示する年">
@@ -266,6 +266,19 @@ export function Dashboard({ displayName, email, signOutHref, claimToken }: Props
           <span>年</span>
         </div>
       </section>
+
+      <nav className="month-tabs" aria-label="月を選択">
+        {MONTHS.map((month) => (
+          <button
+            className={month === selectedMonth ? "selected" : ""}
+            key={month}
+            type="button"
+            onClick={() => setSelectedMonth(month)}
+          >
+            {month}月
+          </button>
+        ))}
+      </nav>
 
       <section className="annual-strip" aria-label={`${year}年の年間集計`}>
         <Metric label="年間報酬" value={annual.grossIncome} tone="ink" />
@@ -291,26 +304,13 @@ export function Dashboard({ displayName, email, signOutHref, claimToken }: Props
         </div>
       </section>
 
-      <nav className="month-tabs" aria-label="月を選択">
-        {MONTHS.map((month) => (
-          <button
-            className={month === selectedMonth ? "selected" : ""}
-            key={month}
-            type="button"
-            onClick={() => setSelectedMonth(month)}
-          >
-            {month}月
-          </button>
-        ))}
-      </nav>
-
       {status === "loading" ? (
         <section className="loading-panel">年間データを読み込んでいます…</section>
       ) : (
         <>
           <section className="template-toolbar panel" aria-label="毎月の予算テンプレート">
             <div>
-              <span className="template-kicker">MONTHLY TEMPLATE</span>
+              <span className="template-kicker">毎月の初期値</span>
               <strong>毎月の予算テンプレート</strong>
               <small>
                 {budgetTemplate
@@ -492,7 +492,7 @@ function TemplateEditor({
     <section className="template-editor panel">
       <div className="template-editor-heading">
         <div>
-          <span className="template-kicker">DEFAULT BUDGET</span>
+          <span className="template-kicker">毎月の初期値</span>
           <h2>予算テンプレートを編集</h2>
           <p>家計予算・請求先・口座ごとの集計先・簡易課税の事業区分を、新しい月へ引き継ぎます。確定額は毎月0円から始まります。</p>
         </div>
