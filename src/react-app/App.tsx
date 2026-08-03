@@ -43,7 +43,7 @@ export default function App() {
     );
   }
 
-  if (!session.user) return <Landing claimToken={claimToken} />;
+  if (!session.user) return <Landing />;
 
   return (
     <Dashboard
@@ -55,8 +55,8 @@ export default function App() {
   );
 }
 
-function Landing({ claimToken }: { claimToken: string }) {
-  const returnTo = claimToken ? `/?claim=${encodeURIComponent(claimToken)}` : "/";
+function Landing() {
+  const returnTo = `${window.location.pathname}${window.location.search}`;
   const signInHref = chatGPTSignInPath(returnTo);
 
   return (

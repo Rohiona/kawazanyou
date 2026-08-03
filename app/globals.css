@@ -476,9 +476,11 @@ input, output, strong { font-variant-numeric: tabular-nums lining-nums; }
   scrollbar-width: none;
 }
 .month-tabs::-webkit-scrollbar { display: none; }
-.month-tabs button {
+.month-tabs button, .month-tabs a {
+  display: grid;
   min-height: 40px;
   padding: 0 10px;
+  place-items: center;
   border: 0;
   border-radius: 9px;
   background: transparent;
@@ -489,8 +491,8 @@ input, output, strong { font-variant-numeric: tabular-nums lining-nums; }
   white-space: nowrap;
   transition: background var(--duration-fast) ease, color var(--duration-fast) ease, box-shadow var(--duration-fast) ease;
 }
-.month-tabs button:hover { background: var(--surface-muted); color: var(--ink); }
-.month-tabs button.selected { background: var(--ink); color: white; box-shadow: 0 3px 9px rgba(20,37,34,.16); }
+.month-tabs button:hover, .month-tabs a:hover { background: var(--surface-muted); color: var(--ink); }
+.month-tabs button.selected, .month-tabs a.selected { background: var(--ink); color: white; box-shadow: 0 3px 9px rgba(20,37,34,.16); }
 
 .annual-strip {
   display: grid;
@@ -876,7 +878,7 @@ input, output, strong { font-variant-numeric: tabular-nums lining-nums; }
   .year-control button { width: 30px; height: 30px; }
   .year-control strong { font-size: 17px; }
   .month-tabs { margin: 0 -12px; padding: 5px 12px; grid-template-columns: repeat(12, 52px); border-right: 0; border-left: 0; border-radius: 0; box-shadow: none; }
-  .month-tabs button { min-height: 42px; }
+  .month-tabs button, .month-tabs a { min-height: 42px; }
   .annual-strip { min-height: 84px; padding: 10px 0; grid-template-columns: repeat(3, 1fr); border-right: 0; border-left: 0; border-radius: 0; background: transparent; box-shadow: none; }
   .metric { padding: 4px 10px; }
   .metric:first-child { padding-left: 0; }

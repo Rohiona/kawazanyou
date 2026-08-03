@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
 import { Brand } from "./Brand";
 import {
   calculateAnnualTotals,
@@ -40,6 +40,11 @@ import {
   setRowLocked,
   type RowMoveDirection,
 } from "../lib/row-order";
+import {
+  planPeriodFromSearch,
+  planPeriodHref,
+  type PlanPeriod,
+} from "../lib/plan-period-url";
 
 const MONTHS = Array.from({ length: 12 }, (_, index) => index + 1);
 const yen = { format: (value: number) => formatMoneyText(value, true) };
@@ -52,8 +57,12 @@ type Props = {
 };
 
 export function Dashboard({ displayName, email, signOutHref, claimToken }: Props) {
-  const [year, setYear] = useState(2026);
-  const [selectedMonth, setSelectedMonth] = useState(7);
+  const initialPeriod = useMemo(
+    () => planPeriodFromSearch(window.location.search),
+    [],
+  );
+  const [year, setYear] = useState(initialPeriod.year);
+  const [selectedMonth, setSelectedMonth] = useState(initialPeriod.month);
   const [plans, setPlans] = useState<MonthlyPlan[]>([]);
   const [savedMonths, setSavedMonths] = useState<number[]>([]);
   const [budgetTemplate, setBudgetTemplate] = useState<BudgetTemplate | null>(null);
@@ -88,7 +97,13 @@ export function Dashboard({ displayName, email, signOutHref, claimToken }: Props
         setTemplateDraft(null);
         setTemplateOpen(false);
         setStatus("ready");
-        if (claimToken) window.history.replaceState({}, "", "/");
+        if (claimToken) {
+          window.history.replaceState(
+            {},
+            "",
+            planPeriodHref({ year, month: selectedMonth }),
+          );
+        }
       })
       .catch((error: Error) => {
         if (!active) return;
@@ -99,6 +114,33 @@ export function Dashboard({ displayName, email, signOutHref, claimToken }: Props
       active = false;
     };
   }, [year, claimToken]);
+
+  useEffect(() => {
+    if (!claimToken) {
+      window.history.replaceState(
+        {},
+        "",
+        planPeriodHref({ year, month: selectedMonth }),
+      );
+    }
+  }, []);
+
+  useEffect(() => {
+    function restorePeriodFromHistory() {
+      const next = planPeriodFromSearch(window.location.search);
+      setMessage("");
+      setSelectedMonth(next.month);
+      if (next.year !== year) {
+        setStatus("loading");
+        setYear(next.year);
+      } else {
+        setStatus("ready");
+      }
+    }
+
+    window.addEventListener("popstate", restorePeriodFromHistory);
+    return () => window.removeEventListener("popstate", restorePeriodFromHistory);
+  }, [year]);
 
   const activePlan = useMemo(
     () =>
@@ -121,9 +163,33 @@ export function Dashboard({ displayName, email, signOutHref, claimToken }: Props
   const annual = calculateAnnualTotals(plans);
 
   function changeYear(nextYear: number) {
-    setStatus("loading");
+    navigateToPeriod({ year: nextYear, month: selectedMonth });
+  }
+
+  function navigateToPeriod(next: PlanPeriod) {
+    window.history.pushState({}, "", planPeriodHref(next));
     setMessage("");
-    setYear(nextYear);
+    setSelectedMonth(next.month);
+    if (next.year !== year) {
+      setStatus("loading");
+      setYear(next.year);
+    } else {
+      setStatus("ready");
+    }
+  }
+
+  function openPeriodLink(event: MouseEvent<HTMLAnchorElement>, next: PlanPeriod) {
+    if (
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey
+    ) {
+      return;
+    }
+    event.preventDefault();
+    navigateToPeriod(next);
   }
 
   function replaceActivePlan(nextPlan: MonthlyPlan) {
@@ -268,14 +334,15 @@ export function Dashboard({ displayName, email, signOutHref, claimToken }: Props
 
       <nav className="month-tabs" aria-label="月を選択">
         {MONTHS.map((month) => (
-          <button
+          <a
             className={month === selectedMonth ? "selected" : ""}
             key={month}
-            type="button"
-            onClick={() => setSelectedMonth(month)}
+            href={planPeriodHref({ year, month })}
+            aria-current={month === selectedMonth ? "page" : undefined}
+            onClick={(event) => openPeriodLink(event, { year, month })}
           >
             {month}月
-          </button>
+          </a>
         ))}
       </nav>
 
@@ -288,16 +355,17 @@ export function Dashboard({ displayName, email, signOutHref, claimToken }: Props
             const income = plans.find((plan) => plan.month === month)?.grossIncome ?? 0;
             const max = Math.max(...plans.map((plan) => plan.grossIncome), 1);
             return (
-              <button
+              <a
                 className={month === selectedMonth ? "bar active" : "bar"}
                 key={month}
-                type="button"
-                onClick={() => setSelectedMonth(month)}
+                href={planPeriodHref({ year, month })}
+                aria-current={month === selectedMonth ? "page" : undefined}
+                onClick={(event) => openPeriodLink(event, { year, month })}
                 title={`${month}月 ${yen.format(income)}`}
               >
                 <span style={{ height: `${Math.max(8, (income / max) * 100)}%` }} />
                 <small>{month}</small>
-              </button>
+              </a>
             );
           })}
         </div>
