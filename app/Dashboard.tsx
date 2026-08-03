@@ -71,6 +71,7 @@ export function Dashboard({ displayName, email, signOutHref, claimToken }: Props
   const [templateSaving, setTemplateSaving] = useState(false);
   const [status, setStatus] = useState<"loading" | "ready" | "saving" | "saved" | "error">("loading");
   const [message, setMessage] = useState("");
+  const monthTabsRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     let active = true;
@@ -141,6 +142,20 @@ export function Dashboard({ displayName, email, signOutHref, claimToken }: Props
     window.addEventListener("popstate", restorePeriodFromHistory);
     return () => window.removeEventListener("popstate", restorePeriodFromHistory);
   }, [year]);
+
+  useEffect(() => {
+    const tabs = monthTabsRef.current;
+    const selectedTab = tabs?.querySelector<HTMLElement>('[aria-current="page"]');
+    if (!tabs || !selectedTab) return;
+
+    const frame = window.requestAnimationFrame(() => {
+      const centeredLeft =
+        selectedTab.offsetLeft - (tabs.clientWidth - selectedTab.clientWidth) / 2;
+      tabs.scrollTo({ left: Math.max(0, centeredLeft), behavior: "smooth" });
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [selectedMonth, year]);
 
   const activePlan = useMemo(
     () =>
@@ -332,7 +347,7 @@ export function Dashboard({ displayName, email, signOutHref, claimToken }: Props
         </div>
       </section>
 
-      <nav className="month-tabs" aria-label="月を選択">
+      <nav ref={monthTabsRef} className="month-tabs" aria-label="月を選択">
         {MONTHS.map((month) => (
           <a
             className={month === selectedMonth ? "selected" : ""}
