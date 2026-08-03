@@ -286,7 +286,7 @@ export function Dashboard({ displayName, email, signOutHref, claimToken }: Props
       return;
     }
     replaceActivePlan(copyPlanBudget(previous, year, selectedMonth));
-    setMessage(`${selectedMonth - 1}月の予算をコピーしました。確定請求額と報酬は0に戻しています`);
+    setMessage(`${selectedMonth - 1}月の予算と請求・引落額をコピーしました。報酬は0円から入力できます`);
   }
 
   async function savePlan() {

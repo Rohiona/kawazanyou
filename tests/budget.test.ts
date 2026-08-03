@@ -387,7 +387,7 @@ test("applying a template keeps budgets and resets month-specific values", () =>
   assert.equal(importedJulyBudgetTemplate.householdItems[0].budget, 115_770);
 });
 
-test("copying a previous month copies only reusable budget fields", () => {
+test("copying a previous month keeps billing actuals and reusable budget fields", () => {
   const july = createPlanFromTemplate(importedJulyBudgetTemplate, 2026, 7);
   july.grossIncome = 1_129_021;
   july.paymentItems[0].actual = 103_392;
@@ -401,7 +401,7 @@ test("copying a previous month copies only reusable budget fields", () => {
 
   const august = copyPlanBudget(july, 2026, 8);
   assert.equal(august.grossIncome, 0);
-  assert.equal(august.paymentItems[0].actual, 0);
+  assert.equal(august.paymentItems[0].actual, 103_392);
   assert.deepEqual(
     august.allocationItems.map(({ name, amount }) => ({ name, amount })),
     [{ name: "報酬連動の振り分け", amount: 0 }],
@@ -411,6 +411,8 @@ test("copying a previous month copies only reusable budget fields", () => {
   assert.equal(august.simplifiedTaxCategory, 3);
   assert.equal(august.memo, "");
   assert.equal(august.householdItems[0].budget, july.householdItems[0].budget);
+  august.paymentItems[0].actual = 1;
+  assert.equal(july.paymentItems[0].actual, 103_392);
 });
 
 test("budget template input clears payment actuals", () => {

@@ -86,6 +86,7 @@ export function copyPlanBudget(
     sourcePlan.householdItems,
     sourcePlan.paymentItems,
     period,
+    { paymentActuals: "preserve" },
   );
   return synchronizeMonthlyPlan({
     ...createEmptyMonth(year, month),
@@ -111,6 +112,7 @@ function cloneBudgetStructure(
   householdItems: BudgetItem[],
   paymentItems: PaymentItem[],
   prefix: string,
+  options: { paymentActuals?: "preserve" | "reset" } = {},
 ) {
   const paymentIdMap = new Map<string, string>();
   const clonedPayments = paymentItems.map((item, index) => {
@@ -119,7 +121,7 @@ function cloneBudgetStructure(
     return {
       id,
       name: item.name,
-      actual: 0,
+      actual: options.paymentActuals === "preserve" ? item.actual : 0,
       ...(item.locked ? { locked: true } : {}),
     };
   });
