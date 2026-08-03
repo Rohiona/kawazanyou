@@ -34,6 +34,17 @@ test("invalid URL values fall back independently to the current period", () => {
   );
 });
 
-test("period links use stable year and month query parameters", () => {
-  assert.equal(planPeriodHref({ year: 2026, month: 8 }), "/?year=2026&month=8");
+test("the current period uses the stable root URL", () => {
+  const current = { year: 2026, month: 8 };
+
+  assert.equal(planPeriodHref(current, current), "/");
+});
+
+test("other periods keep bookmarkable year and month parameters", () => {
+  const current = { year: 2026, month: 8 };
+
+  assert.equal(
+    planPeriodHref({ year: 2026, month: 7 }, current),
+    "/?year=2026&month=7",
+  );
 });

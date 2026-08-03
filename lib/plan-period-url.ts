@@ -24,7 +24,12 @@ export function planPeriodFromSearch(
   };
 }
 
-export function planPeriodHref({ year, month }: PlanPeriod): string {
+export function planPeriodHref(
+  { year, month }: PlanPeriod,
+  current = currentPlanPeriod(),
+): string {
+  if (year === current.year && month === current.month) return "/";
+
   const params = new URLSearchParams({
     year: String(year),
     month: String(month),
